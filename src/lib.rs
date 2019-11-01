@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-const METHODS: [&str; 9] = [
+static METHODS: [&str; 9] = [
     "GET",
     "HEAD",
     "POST",
@@ -18,8 +18,8 @@ struct Param {
 }
 
 struct Node<V> {
-    value: V,
-    params: Vec<Param>,
+    value: Option<V>,
+    params: Option<Vec<Param>>,
     routes: HashMap<String, Node<V>>
 }
 
@@ -40,30 +40,46 @@ pub struct Impetuous<V> {
 impl<V> Impetuous<V> {
 
     pub fn new() -> Impetuous<V> {
+        let mut impetuous: Impetuous<V> = Impetuous {
+            routes: HashMap::new()
+        };
+        for i in 0..METHODS.len() {
+            impetuous.routes.insert(String::from(METHODS[i]), RootNode {
+                static_routes: HashMap::new(),
+                dynamic_routes: Node {
+                    value: None,
+                    params: None,
+                    routes: HashMap::new()
+                }
+            });
+        }
+        impetuous
+    }
+
+    pub fn add(&self) -> Self {
         unimplemented!()
     }
 
-    pub fn add(&self, method: &str, path: &str, handler: V) -> self {
+    fn add_dynamic(&self) {
         unimplemented!()
     }
 
-    fn add_dynamic(&self, root: Node<V>, path: &str, handler: V) {
+    pub fn find(&self) {
         unimplemented!()
     }
 
-    pub fn find(&self, method: &str, path: &str) -> Option<&Route<V>> {
-        unimplemented!()
-    }
-
-    fn find_dynamic(&self, node: Node<V>, path: &str) -> Option<&Route<V>> {
+    fn find_dynamic(&self) {
         unimplemented!()
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::Impetuous;
+
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn new_impetuous() {
+        let impetuous: Impetuous<i32> = Impetuous::new();
+        assert_eq!(impetuous.routes.is_empty(), false);
     }
 }
